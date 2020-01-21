@@ -2,6 +2,7 @@ package io.kodingworks.recycleworker
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 
 /**
@@ -34,7 +35,13 @@ class RecycleWorkerAdapter<T>(private val layoutRes: Int) :
     }
 
     internal fun addList(list: List<T>?) {
-        list?.let { this.list.addAll(it) }
-        notifyDataSetChanged()
+        list?.let {
+            val diffUtil = ItemDiffUtil(this.list, list)
+            val diffResult = DiffUtil.calculateDiff(diffUtil)
+
+            this.list.addAll(it)
+            diffResult.dispatchUpdatesTo(this)
+        }
+//        notifyDataSetChanged()
     }
 }
